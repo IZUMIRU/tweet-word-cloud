@@ -5,8 +5,9 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from bs4 import BeautifulSoup
 from collections import Counter, defaultdict
+import numpy as np
+from PIL import Image
 
-# 名詞だけ抽出、単語をカウント
 def counter(texts):
     t = Tokenizer()
     words_count = defaultdict(int)
@@ -14,13 +15,10 @@ def counter(texts):
     for text in texts:
         tokens = t.tokenize(text)
         for token in tokens:
-            # 品詞から名詞だけ抽出
             pos = token.part_of_speech.split(',')[0]
             if pos in ['名詞']:
-                # 必要ない単語を省く(実際の結果を見てから不必要そうな単語を記載しました)
-                if token.base_form not in ["こと", "よう", "そう", "これ", "それ"]:
-                    words_count[token.base_form] += 1
-                    words.append(token.base_form)
+                words_count[token.base_form] += 1
+                words.append(token.base_form)
     return words_count, words
 
 with open('./tweets/tweet_data', 'r') as f:
@@ -34,13 +32,24 @@ with open('./tweets/tweet_data', 'r') as f:
 words_count, words = counter(texts)
 text = ' '.join(words)
 
-# fontは自分の端末にあるものを使用する
 fpath = "~/Library/Fonts/RictyDiminished-Bold.ttf"
+twitter_logo = np.array(Image.open("./twitter.png"))
+
+# 除外指定
+stop_words = [
+    u'https', u'co', u'LINE', u'アカウント', u'YahooNewsTopics'
+    ,u'news', u'linenews', u'Yahoo', u'ニュース', u'いる', u'する'
+    ,u'ある', u'なる', u'れる', u'できる', u'ない', u'これ', u'こと'
+    ,u'さん', u'られる', u'やる', u'てる', u'よう', u'そう', u'それ'
+]
+
 wordcloud = WordCloud(
     background_color="white",
     font_path = fpath,
-    width=900,
-    height=500
+    width=800,
+    height=500,
+    mask=twitter_logo,
+    stopwords=set(stop_words),
 ).generate(text)
 
 wordcloud.to_file("./word_clouds/word_cloud.png")
