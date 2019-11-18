@@ -27,7 +27,7 @@ params = {'screen_name': '@IZUMIRU0313',
           'count': 200}
 
 # 出力先ファイル
-f_out = open('./tweets/tweet_data', 'w')
+f_out = open('./tweets/data', 'w')
 
 for j in range(100):
     res = twitter.get(url, params=params)

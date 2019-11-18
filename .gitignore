@@ -2,4 +2,4 @@ config.py
 __pycache__
 .vscode
 tweets
-word_clouds
+images

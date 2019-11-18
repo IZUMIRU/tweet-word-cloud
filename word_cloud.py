@@ -21,7 +21,7 @@ def counter(texts):
                 words.append(token.base_form)
     return words_count, words
 
-with open('./tweets/tweet_data', 'r') as f:
+with open('./tweets/data', 'r') as f:
     reader = csv.reader(f, delimiter='\t')
     texts = []
     for row in reader:
@@ -52,4 +52,4 @@ wordcloud = WordCloud(
     stopwords=set(stop_words),
 ).generate(text)
 
-wordcloud.to_file("./word_clouds/word_cloud.png")
+wordcloud.to_file("./images/word_cloud.png")
